@@ -35,7 +35,7 @@ public class loginController {
     //登录
     @PostMapping("/login")
     public ResponseResult<Object> login(SysUser user) {
-        ResponseResult<Map<String, Object>> result = sysUserService.login(user);
+        ResponseResult<String> result = sysUserService.login(user);
         return ResponseResult.success(result.getData());
     }
 }

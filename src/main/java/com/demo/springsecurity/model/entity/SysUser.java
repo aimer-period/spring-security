@@ -1,5 +1,8 @@
 package com.demo.springsecurity.model.entity;
 
+import lombok.ToString;
+
+@ToString
 public class SysUser {
 
   private String password;
@@ -31,7 +34,7 @@ public class SysUser {
   }
 
 
-  public long getId() {
+  public Long getId() {
     return id;
   }
 
