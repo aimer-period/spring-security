@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +26,21 @@ import java.util.Map;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    @Autowired(required = false)
+    @Resource
     private RedisTemplate<String , String> redisTemplate ;
+    @Resource
+    AuthenticationManager authenticationManager;
     @Override
     public ResponseResult<String> login(SysUser user) {
 
-
+        // 创建Authentication对象
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getName() , user.getPassword()) ;
+        // 调用AuthenticationManager的authenticate方法进行认证
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+        if(authentication == null) {
+            log.info("authentication is null");
+//            throw new MyException(401,"用户名或密码错误");
+        }
 
         //登录成功
         //生成token字符串，使用jwt工具类

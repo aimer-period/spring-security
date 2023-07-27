@@ -73,7 +73,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         SysUserDTO user = (SysUserDTO) auth.getPrincipal();
         String token = tokenManager.createToken(user.getSysUser().getName());
         redisTemplate.opsForValue().set(user.getSysUser().getName(), user.getAuthorities(),1800000, TimeUnit.SECONDS);
-        System.out.println("t1111oken = " + token);
+        System.out.println("token = " + token);
         ResponseUtil.out(res, R.ok().data("token", token));
     }
 
