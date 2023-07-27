@@ -1,5 +1,6 @@
 package com.demo.springsecurity.config;
 
+import com.demo.springsecurity.filter.JwtAuthenticationTokenFilter;
 import com.demo.springsecurity.filter.TokenAuthenticationFilter;
 import com.demo.springsecurity.filter.TokenLoginFilter;
 import com.demo.springsecurity.security.DefaultPasswordEncoder;
@@ -20,6 +21,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -49,6 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(jwtAuthenticationTokenFilter(),
+                UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling()
                 //认证失败处理器
                 .authenticationEntryPoint(new UnauthorizedEntryPoint())
@@ -72,6 +76,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new TokenAuthenticationFilter(authenticationManager(), tokenManager, redisTemplate)).httpBasic();
     }
 
+    @Bean
+    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
+        return new JwtAuthenticationTokenFilter();
+    }
 
     /**
      * 密码处理

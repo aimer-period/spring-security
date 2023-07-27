@@ -19,7 +19,6 @@ import java.io.IOException;
 /**
  * 认证过滤器
  */
-@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Resource
     private RedisTemplate<String , String> redisTemplate ;
