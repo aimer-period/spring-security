@@ -1,8 +1,12 @@
 package com.demo.springsecurity.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysRole {
 
   private long id;

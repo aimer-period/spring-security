@@ -44,6 +44,10 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         //获取权限信息
         List<SysRole> userRole = sysUserMapper.getUserRole(user.getId());
+        // 判断是否有角色，没有的话给一个默认的角色
+        if (ObjectUtil.isEmpty(userRole)){
+            userRole.add(new SysRole(1L, "ROLE_USER"));
+        }
         log.info(userRole.toString());
         return new SysUserDTO(user, userRole);
     }
