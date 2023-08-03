@@ -19,6 +19,7 @@ import java.io.IOException;
 /**
  * 认证过滤器
  */
+@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Resource
     private RedisTemplate<String , String> redisTemplate ;
@@ -36,7 +37,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         // 2、对token进行解析，取出其中的userId
         String userId = null ;
         try {
-            userId= JwtUtils.getMemberIdByJwtToken(request);
+            userId= JwtUtils.getMemberIdByJwtToken(token);
         }catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("token非法") ;
@@ -47,6 +48,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         SysUserDTO loginUser = JSONUtil.toBean(loginUserJson, SysUserDTO.class);
         if(loginUser != null) {
             // 4、然后将查询到的LoginUser对象的相关信息封装到UsernamePasswordAuthenticationToken对象中，然后将该对象存储到Security的上下文对象中
+            // 只需要存入信息即可，随便什么都可以
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null , null) ;
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }

@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 登录拦截器
                 .addFilter(new TokenLoginFilter(authenticationManager(), tokenManager, redisTemplate))
                 // 访问拦截器
-                .addFilter(new TokenAuthenticationFilter(authenticationManager(), tokenManager, redisTemplate)).httpBasic();
+                .addFilter(new TokenAuthenticationFilter(authenticationManager(), tokenManager, redisTemplate));
     }
     @Bean
     @Override

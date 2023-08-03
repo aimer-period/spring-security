@@ -9,6 +9,18 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.util.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+
+/**
+ * jWT工具类
+ */
 public class JwtUtils {
 
     //常量
@@ -16,18 +28,18 @@ public class JwtUtils {
     public static final String APP_SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO"; //秘钥
 
     //生成token字符串的方法
-    public static String getJwtToken(String id, String nickname){
+    public static String getJwtToken(String id, String Details){
 
         String JwtToken = Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setHeaderParam("alg", "HS256")
 
-                .setSubject("Education-user")
+                .setSubject("mengya-user")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
 
                 .claim("id", id)  //设置token主体部分 ，存储用户信息
-                .claim("nickname", nickname)
+                .claim("Details", Details)
                 .signWith(SignatureAlgorithm.HS256, APP_SECRET)
                 .compact();
 
@@ -69,11 +81,9 @@ public class JwtUtils {
 
     /**
      * 根据token字符串获取会员id
-     * @param request
      * @return
      */
-    public static String getMemberIdByJwtToken(HttpServletRequest request) {
-        String jwtToken = request.getHeader("token");
+    public static String getMemberIdByJwtToken(String jwtToken) {
         boolean isAvailable = checkToken(jwtToken);
         if(!isAvailable){
             return "";
@@ -84,5 +94,40 @@ public class JwtUtils {
         Claims claims = claimsJws.getBody();
         return (String)claims.get("id");
     }
+
+    /**
+     * 根据token字符串获取用户信息
+     * @param request
+     * @return
+     */
+    public static String getMemberInfoByJwtToken(HttpServletRequest request) {
+        String jwtToken = request.getHeader("token");
+        boolean isAvailable = checkToken(jwtToken);
+        if(!isAvailable){
+            return "";
+        }
+
+        if(StringUtils.isEmpty(jwtToken)) return "";
+        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
+        Claims claims = claimsJws.getBody();
+        return (String)claims.get("Details");
+    }
+    /**
+     * 根据token字符串获取用户信息
+     * @param jwtToken
+     * @return
+     */
+    public static String getDetailsByJwtToken(String jwtToken) {
+        boolean isAvailable = checkToken(jwtToken);
+        if(!isAvailable){
+            return "";
+        }
+
+        if(StringUtils.isEmpty(jwtToken)) return "";
+        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
+        Claims claims = claimsJws.getBody();
+        return (String)claims.get("Details");
+    }
+
 }
 

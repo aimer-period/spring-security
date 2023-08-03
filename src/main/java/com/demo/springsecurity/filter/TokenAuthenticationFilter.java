@@ -23,7 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 访问过滤器
+ * Basic模式访问过滤器
  */
 public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
